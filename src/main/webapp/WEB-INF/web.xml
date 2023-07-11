@@ -35,4 +35,15 @@
   </servlet-mapping>
   
   
+  
+   <servlet>
+ 	<servlet-name>action3</servlet-name>
+ 	<servlet-class>com.mysite.controller.MyController3</servlet-class>
+ </servlet>
+  
+  <servlet-mapping>
+  	<servlet-name>action3</servlet-name>
+  	<url-pattern>*.can</url-pattern>
+  </servlet-mapping>
+  
 </web-app>

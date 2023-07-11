@@ -23,7 +23,7 @@ public class BoardDTO2 {
 	 			@NOArgeContructor : 기본생성자
 	 			@ToString : toString 메소드 오버라이딩
 	 			
-	 			@Data: 모든 것을 한꺼번에 생성,
+	 			@Data: 모든 것을 한꺼번에 생성
 	 */
 
 	private int seq;
