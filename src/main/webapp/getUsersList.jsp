@@ -32,7 +32,7 @@
 			<th bgcolor="orange" width="100px"> 아이디 </th>
 			<th bgcolor="orange" width="200px"> 패스워드 </th>
 			<th bgcolor="orange" width="150px"> 이름 </th>
-			<th bgcolor="orange" width="150px"> Role </th>
+			<th bgcolor="orange" width="150px"> 권한 </th>
 		</tr>
 		
 		<!-- DB의 값을 가져와서 루프 시작 -->
@@ -41,7 +41,10 @@
 		
 		%>
 		<tr>
-			<td> <%= k.getId() %> </td>
+			<td> <a href="getUsers.do?id=<%= k.getId() %>">
+					<%= k.getId() %>
+				</a>
+			</td>
 			<td> <%= k.getPassword() %> </td>
 			<td> <%= k.getName() %> </td>
 			<td> <%= k.getRole() %> </td>

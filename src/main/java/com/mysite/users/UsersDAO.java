@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mysite.users.UsersDTO;
+import com.mysite.board.BoardDTO;
 import com.mysite.common.JDBCUtil;
 
 public class UsersDAO {
@@ -15,12 +15,12 @@ public class UsersDAO {
 	private ResultSet rs = null;
 	
 	// SQL 쿼리를 상수로 정의 후에 각각 필요한 메소드에서 사용
-	private final String USER_INSERT =
+	private final String USERS_INSERT =
 			"insert into users(id, password, name, role) values(?,?,?,?)";
-	private final String USER_UPDATE = "";
-	private final String USER_DELETE = "";
-	private final String USER_GET = "";
-	private final String USER_LIST = "select * from users order by id asc";
+	private final String USERS_UPDATE = "update users set password=?, name=?, role=? where id=?";
+	private final String USERS_DELETE = "";
+	private final String USERS_GET = "";
+	private final String USERS_LIST = "select * from users order by id asc";
 	
 	
 	// 1. users 테이블의 값을 넣는 메소드
@@ -32,7 +32,7 @@ public class UsersDAO {
 			
 //			System.out.println("커넥션 이후 호출 잘됨 ");
 			// PreparedStatement 객체를 활성화
-			pstmt = conn.prepareStatement(USER_INSERT);	// pstmt 객체 활성화
+			pstmt = conn.prepareStatement(USERS_INSERT);	// pstmt 객체 활성화
 			// ?에 들어갈 값을 dto에 getter를 사용해서 값을 할당
 			pstmt.setString(1, dto.getId());
 			pstmt.setString(2, dto.getPassword());
@@ -68,7 +68,7 @@ public class UsersDAO {
 		
 		try {
 			conn = JDBCUtil.getConnection();
-			pstmt = conn.prepareStatement(USER_LIST);
+			pstmt = conn.prepareStatement(USERS_LIST);
 			rs = pstmt.executeQuery();		// rs에는 select한 결과 레코드셋을 담고 있다.
 			
 			// rs의 값을 끄집어 내서 DTO에 저장
@@ -98,6 +98,66 @@ public class UsersDAO {
 		}
 		
 		return usersList;
+	}
+
+	public void updateUsers(UsersDTO dto) {
+		System.out.println("updateUsers 메소드 호출");
+		
+		try {
+			conn = JDBCUtil.getConnection();
+			pstmt = conn.prepareStatement(USERS_UPDATE);
+			
+			pstmt.setString(2, dto.getPassword());
+			pstmt.setString(3, dto.getName());
+			pstmt.setString(4, dto.getRole());
+			
+			pstmt.executeUpdate();
+			
+			System.out.println("업데이트 성공");
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("업데이트 실패");
+		}finally {
+			JDBCUtil.close(pstmt, conn);
+		}
+	}
+
+	public UsersDTO getUsers(UsersDTO dto) {
+		UsersDTO users = new UsersDTO();
+		
+		//System.out.println("메소드 출력 : " + dto.getSeq());
+		
+		try {
+			conn = JDBCUtil.getConnection();
+			pstmt = conn.prepareStatement(USERS_GET);
+			pstmt.setString(1, dto.getId() );
+			
+			rs = pstmt.executeQuery();
+			
+			System.out.println("메소드 출력 부분 ");
+			
+			while (rs.next()) {
+				
+				users.setId(rs.getString("ID"));
+				users.setPassword(rs.getString("PASSWORD"));
+				users.setName(rs.getString("NAME"));
+				users.setRole(rs.getString("ROLE"));
+				
+			}
+			
+			
+			System.out.println("Users 테이블에서 상세 레코드가 잘 처리되었습니다.");
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+			System.out.println("Users 테이블에서 상세 레코드 처리가 실패되었습니다.");
+			
+		}finally {
+			JDBCUtil.close(rs, pstmt, conn);
+		}
+		
+		return users;
 	}
 	
 	
