@@ -1,12 +1,30 @@
 <%@page contentType="text/html; charset=UTF-8"%>
+
+<%
+		String sessionId = (String) session.getAttribute("id"); 
+		String sessionRole = (String) session.getAttribute("role"); 
+
+
+%>
+
+
+
 <!DOCTYPE html>
 <html>
 <head>
-<title>새글등록</title>
+<title>새 글등록</title>
 </head>
 <body>
 	<center>
-		<h1>글 등록</h1>
+		<h1>글 등록  -- 로그인 한 사용자만 글을 등록 함. </h1>
+		
+		<% 
+		
+			if (sessionId != null) {
+		%>
+		
+		<%= sessionId %> 님은 환영합니다. 당신을 글을 쓸 수 있습니다. 
+		
 		<a href="logout.do">Log-out</a>
 		<hr>
 		<form action="insertBoard.do" method="post">
@@ -17,7 +35,7 @@
 				</tr>
 				<tr>
 					<td bgcolor="orange">작성자</td>
-					<td align="left"><input type="text" name="writer" size="10" /></td>
+					<td align="left"><input type="text" name="writer" size="10" value="<%= sessionId %>" /></td>
 				</tr>
 				<tr>
 					<td bgcolor="orange">내용</td>
@@ -29,8 +47,26 @@
 				</tr>
 			</table>
 		</form>
+		
+		<%   
+		
+			} else {    // sessionId 변수가 null 일때 출력 부분 		
+		%>
+		
+			당신은 로그인 되지 않는 상태 입니다. 먼저 로그인후 글을 쓸수 있습니다. 
+			<br><br> 
+			<a href = "LoginForm.jsp"> 로그인 하기</a>
+		
+		<% 
+			}
+		
+		%>
+		
 		<hr>
 		<a href="getBoardList.do">글 목록 가기</a>
+		<br> <br> 
+		<a href = "/JSP_Study_MVC_M2"> 처음 페이지로 이동 </a>
+		
 	</center>
 </body>
 </html>

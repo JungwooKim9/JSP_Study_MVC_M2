@@ -33,3 +33,15 @@ insert into users
 values ('user', '1234', '일반사용자', 'Users');
 
 select * from users;
+
+-- 제품을 넣는 테이블: 관리자(Admin) - insertProducts.jsp: 로그인 후 Admin 룰을 가진 사용자만
+--                                 getProducts.jsp
+CREATE TABLE products (
+    p_code number(5)      NOT NULL primary key,
+    p_name varchar2(100)  NULL,
+    p_kind char(1)        NULL,
+    p_price varchar2(10)  NULL,
+    p_content varchar2(1000)  NULL,
+    p_quantity varchar2(5)    NULL,
+    indate date   default sysdate NULL
+);

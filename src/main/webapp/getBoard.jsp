@@ -40,6 +40,7 @@
 		
 			<!-- 글 수정시 seq 변수 값을 서버로 전송 -->
 			<input type="hidden" name="seq" value="<%= board.getSeq() %>">
+			<input type="hidden" name="writer" value="<%= board.getWriter() %>">
 			
 			<table border="1px" cellspaing="0" cellpadding="0">
 				<tr> <td bgcolor="orange"> 제목 </td>
@@ -68,7 +69,9 @@
 		<br> <br>
 		<a href="insertBoard.jsp"> 글쓰기 </a>
 		<br> <br>
-		<a href="deleteBoard.do?seq=<%= board.getSeq() %>"> 글삭제 </a>
+		<a href="deleteBoard.do?seq=<%= board.getSeq() %>&writer<%= board.getWriter() %>"> 글삭제 </a>
+		<br> <br>
+		<a href="/JSP_Study_MVC_M2"> 처음 페이지로 이동 </a>
 		
 	</div>
 </body>

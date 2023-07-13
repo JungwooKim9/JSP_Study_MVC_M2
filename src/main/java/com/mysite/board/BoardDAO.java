@@ -20,10 +20,11 @@ public class BoardDAO {
 	private ResultSet rs = null;
 	
 	// SQL 쿼리를 상수로 정의 후에 각각 필요한 메소드에서 사용
+	// MVC M2 환경으로 CRUD
 	private final String BOARD_INSERT =
 			"insert into board(seq,title,writer,content) values((select nvl(max(seq),0) + 1 from board), ?,?,?)";
 	private final String BOARD_UPDATE = "update board set title=?, content=? where seq=?";
-	private final String BOARD_DELETE = "";
+	private final String BOARD_DELETE = "delete board where seq = ?";
 	private final String BOARD_GET = "select * from board where seq = ?";
 	private final String BOARD_ADD_CNT = "update board set cnt = (select cnt + 1 from board where seq = ?) where seq = ?";
 	private final String BOARD_LIST = "select * from board order by seq desc";
@@ -94,6 +95,26 @@ public class BoardDAO {
 	
 	
 	// 3. DELETE
+		// BOARD_DELETE = "delete board where seq = ?";
+	public void deleteBoard(BoardDTO dto) {
+		System.out.println("삭제 메소드 호출됨");
+		try {
+			conn = JDBCUtil.getConnection();
+			pstmt = conn.prepareStatement(BOARD_DELETE);
+			pstmt.setInt(1, dto.getSeq());
+			pstmt.executeUpdate();	// insert, update, delete
+			
+			System.out.println("삭제 성공");
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("삭제 실패");
+		}finally {
+			JDBCUtil.close(pstmt, conn);
+		}
+		
+		
+	}
 	
 	// 4. 상세 페이지 (GET): 레코드 1개: 리턴 타입 BoardDTO
 		// BOARD_GET = "select * from board where seq = ?";

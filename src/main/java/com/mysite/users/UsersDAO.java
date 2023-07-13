@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mysite.board.BoardDTO;
 import com.mysite.common.JDBCUtil;
 
 public class UsersDAO {
@@ -19,9 +18,9 @@ public class UsersDAO {
 			"insert into users(id, password, name, role) values(?,?,?,?)";
 	private final String USERS_UPDATE = "update users set password=?, name=?, role=? where id=?";
 	private final String USERS_DELETE = "";
-	private final String USERS_GET = "";
+	private final String USERS_GET = "select * from users where id = ?";
 	private final String USERS_LIST = "select * from users order by id asc";
-	
+	private final String USERS_LOGIN = "select * from users where id = ? and password = ?";
 	
 	// 1. users 테이블의 값을 넣는 메소드
 	public void insertUsers(UsersDTO dto) {
@@ -100,6 +99,7 @@ public class UsersDAO {
 		return usersList;
 	}
 
+	//USERS_UPDATE = "update users set password=?, name=?, role=? where id=?";
 	public void updateUsers(UsersDTO dto) {
 		System.out.println("updateUsers 메소드 호출");
 		
@@ -107,9 +107,10 @@ public class UsersDAO {
 			conn = JDBCUtil.getConnection();
 			pstmt = conn.prepareStatement(USERS_UPDATE);
 			
-			pstmt.setString(2, dto.getPassword());
-			pstmt.setString(3, dto.getName());
-			pstmt.setString(4, dto.getRole());
+			pstmt.setString(1, dto.getPassword());
+			pstmt.setString(2, dto.getName());
+			pstmt.setString(3, dto.getRole());
+			pstmt.setString(4, dto.getId());
 			
 			pstmt.executeUpdate();
 			
@@ -156,6 +157,46 @@ public class UsersDAO {
 		}finally {
 			JDBCUtil.close(rs, pstmt, conn);
 		}
+		
+		return users;
+	}
+	
+	// 로그인 처리 메소드
+	// "select * from users where id = ? and password = ?";
+	public UsersDTO login(UsersDTO dto) {
+		UsersDTO users = null;
+		
+		try {
+			conn = JDBCUtil.getConnection();
+			pstmt= conn.prepareStatement(USERS_LOGIN);
+			pstmt.setString(1, dto.getId());
+			pstmt.setString(2, dto.getPassword());
+			
+			rs = pstmt.executeQuery();
+			
+			// 레코드가 존재할 때 작동
+			while (rs.next()) {
+				users = new UsersDTO();
+				users.setId(rs.getString("ID"));
+				users.setName(rs.getString("NAME"));
+				users.setPassword(rs.getString("PASSWORD"));
+				users.setRole(rs.getString("ROLE"));
+				
+				System.out.println("인증 성공: DB에 해당 ID와 Password가 존재함");
+				
+			}
+			
+			// rs의 값이 존재하면: 인증 성공
+			// rs의 값이 존재하지 않으면: 인증 실패
+			System.out.println("로그인 메소드 잘 작동");
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("로그인 처리시 오류 발생");
+		}finally {
+			JDBCUtil.close(rs, pstmt, conn);
+		}
+		
 		
 		return users;
 	}
