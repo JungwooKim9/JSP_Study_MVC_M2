@@ -82,5 +82,21 @@
 	<a href="getUsersList.do"> 사용자 리스트 페이지 </a> <p />
 	<a href="insertUsers.jsp"> 사용자 등록 </a> <p />
 	
+	<%
+		if (sessionRole != null && sessionRole.equals("Admin")) {
+	%>
+	<h3> 관리자만 볼 수 있는 페이지 </h3>
+	
+	
+	<%
+		}else {
+	%>
+	<h3> 일반 사용자가 볼 수 있는 페이지 </h3>
+	
+	
+	<%
+		}
+	%>
+	
 </body>
 </html>

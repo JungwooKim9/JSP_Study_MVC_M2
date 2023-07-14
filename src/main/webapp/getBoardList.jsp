@@ -21,12 +21,32 @@
 		width: 750px;
 		margin: 0 auto;
 	}
+	select, input {
+		padding: 3px;
+	}
 </style>
 </head>
 <body>
 	<div>
 	<h1> 글 목록 </h1>
+	<br>
+	<table cellpadding="0" cellspacing="0" width="700px">
+		<tr> <td>
+			<form action="getBoardList.do" method="post">
+				<select name="searchCondition">
+					<option value="TITLE"> 제목 검색 </option>
+					<option value="WRITER"> 작성자 검색 </option>				
+					<option value="CONTENT"> 내용 검색 </option>
+					<option value="REGDATE"> 날짜 검색 </option>
+				</select>
+				<input type="text" name="searchKeyword" size="40">
+				<input type="submit" value="검색">				
+			</form>
+			
+		</td> </tr>
+	</table>
 
+	<br>
 	<table border="1px" cellpadding="0" cellspacing="0" width="700px">
 		<tr>
 			<th bgcolor="orange" width="100px"> 번호 </th>

@@ -209,10 +209,30 @@ public class MyController extends HttpServlet {
 			
 			
 		} else if (path.equals("/getBoardList.do")) {
+			// 글 목록
 			System.out.println("getBoardList.do 를 요청 했습니다. ");
+			
+			// 클라이언트에서 받은 검색어를 DTO에 저장 후 메소드 호출
+			String searchCondition = request.getParameter("searchCondition");
+			String searchKeyword = request.getParameter("searchKeyword");
+			
+			// Null을 처리해야 함	주의: URL에서 요청을 했을 때 NULL이 적용됨: getBoardList.do
+			if (searchCondition == null) {
+				searchCondition = "TITLE";
+			}else if (searchKeyword == null) {
+				searchKeyword = "";
+			}
+			
+			System.out.println("=====검색어 출력=====");
+			System.out.println(searchCondition);
+			System.out.println(searchKeyword);
+			
 			
 			// 1. DTO 객체 생성
 			BoardDTO dto = new BoardDTO();
+			
+			dto.setSearchCondition(searchCondition);
+			dto.setSearchKeyword(searchKeyword);
 			
 			// 2. DAO의 getBoardList(dto)
 			BoardDAO dao = new BoardDAO();

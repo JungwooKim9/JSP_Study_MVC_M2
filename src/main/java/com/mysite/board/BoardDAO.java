@@ -29,6 +29,13 @@ public class BoardDAO {
 	private final String BOARD_ADD_CNT = "update board set cnt = (select cnt + 1 from board where seq = ?) where seq = ?";
 	private final String BOARD_LIST = "select * from board order by seq desc";
 	
+	// 검색 기능 쿼리 추가 (T: TITLE, W: WRITER, C: CONTENT)
+	
+	private final String BOARD_LIST_T = "select * from board where TITLE like '%'||?||'%' order by seq desc";
+	private final String BOARD_LIST_W = "select * from board where WRITER like '%'||?||'%' order by seq desc";
+	private final String BOARD_LIST_C = "select * from board where CONTENT like '%'||?||'%' order by seq desc";
+	private final String BOARD_LIST_R = "select * from board where REGDATE like '%'||?||'%' order by seq desc";
+	
 	// 1. board 테이블에 값을 넣는 메소드: insert
 	public void insertBoard(BoardDTO dto) {
 		System.out.println("=====insertBoard 기능 처리=====");
@@ -182,6 +189,12 @@ public class BoardDAO {
 	
 	// 5. 리스트 페이지 (BOARD_LIST): 레코드 여러개
 		// BOARD_LIST = "select * from board order by seq desc"
+	
+//	BOARD_LIST_T = "select * from board where TITLE like '%'||?||'%' order by seq desc";
+//	BOARD_LIST_W = "select * from board where WRITER like '%'||?||'%' order by seq desc";
+//	BOARD_LIST_C = "select * from board where CONTENT like '%'||?||'%' order by seq desc";
+//	BOARD_LIST_R = "select * from board where REGDATE like '%'||?||'%' order by seq desc";
+	
 	public List<BoardDTO> getBoardList(BoardDTO dto){
 		System.out.println("getBoardList 메소드 호출 - 게시판 리스트 페이지");
 		
@@ -190,7 +203,30 @@ public class BoardDAO {
 		
 		try {
 			conn = JDBCUtil.getConnection();
-			pstmt = conn.prepareStatement(BOARD_LIST);
+			
+			// if 조건을 사용해서 dto의 넘어오는 dto.getSearchCondition(): TITLE, WRITER, CONTENT
+			
+			System.out.println("=====BoardDAO에서 출력=====");
+			System.out.println(dto.getSearchCondition());
+			System.out.println(dto.getSearchKeyword());
+			
+			if (dto.getSearchCondition().equals("TITLE")) {
+				pstmt = conn.prepareStatement(BOARD_LIST_T);
+				
+			}else if (dto.getSearchCondition().equals("WRITER")) {
+				pstmt = conn.prepareStatement(BOARD_LIST_W);
+				
+			}else if (dto.getSearchCondition().equals("CONTENT")) {
+				pstmt = conn.prepareStatement(BOARD_LIST_C);
+				
+			}else if (dto.getSearchCondition().equals("REGDATE")) {
+				pstmt = conn.prepareStatement(BOARD_LIST_R);
+			}
+
+			
+			// ?에 값을 할당
+			pstmt.setString(1, dto.getSearchKeyword());
+			
 			rs = pstmt.executeQuery();		// rs에는 select한 결과 레코드셋을 담고 있다.
 			
 			// rs의 값을 끄집어 내서 DTO에 저장
